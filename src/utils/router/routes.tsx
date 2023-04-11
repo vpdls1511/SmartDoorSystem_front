@@ -1,4 +1,3 @@
-import React from 'react'
 import {RouteObject} from "react-router-dom";
 import {LayoutRouter} from "./RouterList";
 import {DefaultRouterInterface, LayoutRouterInterface} from "../../common/interfaces/RouterInterface";
