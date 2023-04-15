@@ -27,9 +27,9 @@ const AuthLayout: React.FC = () => {
 			<Outlet/>
 		</AuthBox>
 		<AlertModal
-			isVisible={true}
+			isVisible={false}
 			title={'Modal'}
-			multiple={false}
+			multiple={true}
 		>
 			asdfasdfasfasdf
 		</AlertModal>
