@@ -1,5 +1,5 @@
 import {useRoutes} from "react-router-dom";
-import routes from "./utils/router/routes";
+import routes from "./router/routes";
 
 function App() {
   return useRoutes(routes())
