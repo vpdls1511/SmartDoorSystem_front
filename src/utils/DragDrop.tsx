@@ -5,7 +5,7 @@ import {read} from "fs";
 
 const DragDropComp = styled.div`
   width: 100%;
-  min-height: 200px;
+  min-height: 250px;
   height: auto;
   border: 2px dashed #999;
   border-radius: 20px;
@@ -141,7 +141,6 @@ const DragDrop = (): JSX.Element => {
 							alt={''}
 							onClick={onFilterFiles}
 						/>
-
 				}
 			</DragDropComp>
 

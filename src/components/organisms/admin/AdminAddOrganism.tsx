@@ -1,9 +1,10 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useRef, useState} from "react";
 import styled from "styled-components";
 import DragDrop from "../../../utils/DragDrop";
+import RoomList from "./RoomList";
 
 const InputWrap = styled.div`
-  flex: 1;
+  flex: 2;
   width: 200px;
   padding: 5rem;
   border-right: 1px solid #777;
@@ -11,61 +12,66 @@ const InputWrap = styled.div`
 
 const InfoInputWrap = styled.div`
   width: 100%;
-  button {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
+`
+
+const InputText = styled.input`
+  width: 100%;
 `
 
 const Button = styled.button`
-  margin-top: 50px;
-  width: 100%;
-  height: 50px;
-`
+  display: inline-block;
+  width: 100%;`
 
 const AdminAddOrganism: React.FC = () => {
 
-	const buildRef = useRef(null)
-	const roomRef = useRef(null)
-	const professorRef = useRef(null)
+	const contentRef = useRef<any>([])
+	const roomRef: any = useRef(null)
+	const noRef: any = useRef(null)
+	const professorRef: any = useRef(null)
+	const stdRef: any = useRef(null)
 
 	const [contents, setContents] = useState([
 		{
-			id: 0,
 			buildName: '공학1관',
 			roomNo: '323',
 			professorName: '최은복',
-		},
-		{
-			id: 0,
-			buildName: '공학1관',
-			roomNo: '323',
-			professorName: '최은복',
-		},
-		{
-			id: 0,
-			buildName: '공학1관',
-			roomNo: '323',
-			professorName: '최은복',
+			size: '25',
+			users: '10'
 		},
 	])
 
-	useEffect(() => {
+	const onAddContent = useCallback(() => {
+		const temp = contentRef.current
 
-	}, [buildRef, roomRef, professorRef])
+		const result = {
+			buildName: temp[0].value,
+			roomNo: temp[1].value,
+			professorName: temp[2].value,
+			size: temp[3].value,
+			users:temp[4].value
+		}
+		setContents([...contents, result])
+	}, [contents])
 
 	return <>
 		<InputWrap>
 			<InfoInputWrap>
 				<DragDrop/>
-				<div> {
-					contents.map((it, idx) => {
-						return <div> {it.buildName} | {it.roomNo} | {it.professorName} </div>
-					})
-				} </div>
-				<button> +</button>
-			</InfoInputWrap>
+				<br/>
+				<InputText ref={(el) => contentRef.current[0] = el} type={'text'} placeholder={'건물 이름'}/>
 
+				<br/><br/>
+				<InputText ref={(el) => contentRef.current[1] = el} type={'text'} placeholder={'호수'}/>
+				<InputText ref={(el) => contentRef.current[2] = el} type={'text'} placeholder={'담당자'}/>
+				<InputText ref={(el) => contentRef.current[4] = el} type={'text'} placeholder={'크기'}/>
+				<InputText ref={(el) => contentRef.current[3] = el} type={'text'} placeholder={'최대수용인원'}/>
+				<br/><br/>
+				<Button onClick={onAddContent}> 추가하기 </Button>
+				<br/>
+				<br/>
+				<RoomList list={contents}/>
+			</InfoInputWrap>
+			<br/>
 			<Button> 등록하기 </Button>
 		</InputWrap>
 	</>
