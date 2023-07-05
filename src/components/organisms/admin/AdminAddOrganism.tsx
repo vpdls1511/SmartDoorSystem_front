@@ -30,15 +30,15 @@ const AdminAddOrganism: React.FC = () => {
 	const professorRef: any = useRef(null)
 	const stdRef: any = useRef(null)
 
-	const [contents, setContents] = useState([
-		{
-			buildName: '공학1관',
+	const [contents, setContents] = useState({
+		buildName: '공학1관',
+		room : [{
 			roomNo: '323',
 			professorName: '최은복',
 			size: '25',
 			users: '10'
-		},
-	])
+		}]
+	})
 
 	const onAddContent = useCallback(() => {
 		const temp = contentRef.current
@@ -51,15 +51,25 @@ const AdminAddOrganism: React.FC = () => {
 		}
 
 		const result = {
-			buildName: temp[0].value,
 			roomNo: temp[1].value,
 			professorName: temp[2].value,
 			size: temp[3].value,
 			users: temp[4].value
 		}
 
-		setContents([...contents, result])
+		setContents({
+			buildName: temp[0].value,
+			room: [
+				...contents.room,
+				result
+			]
+		})
 	}, [contents])
+
+	const onSubmitData = () => {
+		const result = JSON.stringify(contents);
+		console.log(result)
+	}
 
 	return <>
 		<InputWrap>
@@ -80,7 +90,7 @@ const AdminAddOrganism: React.FC = () => {
 				<RoomList list={contents}/>
 			</InfoInputWrap>
 			<br/>
-			<Button> 등록하기 </Button>
+			<Button onClick={onSubmitData}> 등록하기 </Button>
 		</InputWrap>
 	</>
 }
