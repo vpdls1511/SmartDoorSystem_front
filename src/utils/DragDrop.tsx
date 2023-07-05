@@ -20,6 +20,7 @@ const DragDropComp = styled.div`
 
 const PreviewImage = styled.img`
 	width: 100%;
+  cursor: pointer;
 `
 
 const DragDrop = (): JSX.Element => {
@@ -59,27 +60,24 @@ const DragDrop = (): JSX.Element => {
 		let selectFile: File
 		const reader = new FileReader()
 
-		// 드래그 했을 때와 안했을 때 가리키는 파일 배열을 다르게 해줍니다.
 		if (e.type === "drop") {
-			// 드래그 앤 드롭 했을때
 			selectFile = e.dataTransfer.files[0];
 		} else {
-			// "파일 첨부" 버튼을 눌러서 이미지를 선택했을때
 			selectFile = e.target.files[0];
 		}
 
 		reader.onload = (e: ProgressEvent<FileReader>) => {
-			console.log(e.target?.result)
 			setImage(e.target?.result)
 		}
-
-		console.log(selectFile)
 		reader.readAsDataURL(selectFile)
 
-		console.log(selectFile)
-
 		setFile(selectFile);
-	}, [file]); // 위에서 선언했던 files state 배열을 deps에 넣어줍니다.
+	}, [file]);
+
+	const onFilterFiles = useCallback((e: any): void => {
+		setFile(null)
+		setImage('')
+	}, [file])
 
 	const handleDrop = useCallback(
 		(e: DragEvent): void => {
@@ -138,8 +136,11 @@ const DragDrop = (): JSX.Element => {
 						>
 							클릭하거나 도면을 드래그하여 업로드 해 주세요.
 						</label> :
-						<PreviewImage src={image}>
-						</PreviewImage>
+						<PreviewImage
+							src={image}
+							alt={''}
+							onClick={onFilterFiles}
+						/>
 
 				}
 			</DragDropComp>
