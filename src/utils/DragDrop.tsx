@@ -4,16 +4,40 @@ import styled from "styled-components";
 
 const DragDropComp = styled.div`
   width: 100%;
-	min-height: 200px;
-	height: auto;
-	border: 2px dashed #999;
-	border-radius: 20px;
+  min-height: 200px;
+  height: auto;
+  border: 2px dashed #999;
+  border-radius: 20px;
   display: flex;
   display: -webkit-flex;
   flex-direction: column;
   -ms-flex-direction: column;
   justify-content: center;
   align-items: center;
+`
+
+const FileListWrap = styled.div`
+	width: 100%;
+  cursor: pointer;
+  transition: 0.12s ease-in;
+`
+
+const FileList = styled.div`
+	
+	width: calc(100% - 20px);
+  padding: 8px;
+  border: 1px solid black;
+  margin: 10px;
+  display: flex;
+  justify-content: space-between;
+`
+
+const FileListFilter = styled.div`
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
 `
 
 interface IFileTypes {
@@ -115,6 +139,11 @@ const DragDrop = (): JSX.Element => {
 		}
 	}, [handleDragIn, handleDragOut, handleDragOver, handleDrop]);
 
+	const handleFilterFile = useCallback((id: number): void => {
+		// 매개변수로 받은 id와 일치하지 않는지에 따라서 filter 해줍니다.
+		setFiles(files.filter((file: any) => file.id !== id));
+	}, [files]);
+
 	useEffect(() => {
 		initDragEvents();
 
@@ -122,22 +151,47 @@ const DragDrop = (): JSX.Element => {
 	}, [initDragEvents, resetDragEvents]);
 
 	return (
-		<DragDropComp>
-			<input
-				type="file"
-				id="fileUpload"
-				style={{display: "none"}} // label을 이용하여 구현하기에 없애줌
-				multiple={true} // 파일 다중선택 허용
-			/>
+		<>
+			<DragDropComp>
+				<input
+					type="file"
+					id="fileUpload"
+					style={{display: "none"}} // label을 이용하여 구현하기에 없애줌
+					multiple={true} // 파일 다중선택 허용
+				/>
 
-			<label
-				className={isDragging ? "DragDrop-File-Dragging" : "DragDrop-File"}
-				htmlFor="fileUpload"
-				ref={dragRef}
-			>
-				도면을 드래그 해 주세요.
-			</label>
-		</DragDropComp>
+				<label
+					className={isDragging ? "DragDrop-File-Dragging" : "DragDrop-File"}
+					htmlFor="fileUpload"
+					ref={dragRef}
+				>
+					도면을 드래그 해 주세요.
+				</label>
+			</DragDropComp>
+
+			<FileListWrap>
+				{files.length > 0 &&
+					files.map((file: IFileTypes) => {
+						const {
+							id,
+							object: {name}
+						} = file;
+
+						return (
+							<FileList key={id}>
+								<div>{name}</div>
+								<FileListFilter
+									className="DragDrop-Files-Filter"
+									onClick={(e) => handleFilterFile(id)}
+								>
+									x
+								</FileListFilter>
+							</FileList>
+						);
+					})}
+			</FileListWrap>
+
+		</>
 	);
 }
 
