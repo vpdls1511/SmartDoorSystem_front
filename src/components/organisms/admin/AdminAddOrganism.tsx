@@ -43,13 +43,21 @@ const AdminAddOrganism: React.FC = () => {
 	const onAddContent = useCallback(() => {
 		const temp = contentRef.current
 
+		for (const it of temp) {
+			if (it.value.isEmpty || !it.value) {
+				alert("비어있는 필드가 존재합니다.")
+				return
+			}
+		}
+
 		const result = {
 			buildName: temp[0].value,
 			roomNo: temp[1].value,
 			professorName: temp[2].value,
 			size: temp[3].value,
-			users:temp[4].value
+			users: temp[4].value
 		}
+
 		setContents([...contents, result])
 	}, [contents])
 
