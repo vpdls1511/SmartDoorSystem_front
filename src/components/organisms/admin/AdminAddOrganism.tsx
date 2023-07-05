@@ -32,6 +32,7 @@ const AdminAddOrganism: React.FC = () => {
 
 	const [contents, setContents] = useState({
 		buildName: '공학1관',
+		floor: '3',
 		room : [{
 			roomNo: '323',
 			professorName: '최은복',
@@ -51,14 +52,15 @@ const AdminAddOrganism: React.FC = () => {
 		}
 
 		const result = {
-			roomNo: temp[1].value,
-			professorName: temp[2].value,
-			size: temp[3].value,
-			users: temp[4].value
+			roomNo: temp[2].value,
+			professorName: temp[3].value,
+			size: temp[4].value,
+			users: temp[5].value
 		}
 
 		setContents({
 			buildName: temp[0].value,
+			floor: temp[1].value,
 			room: [
 				...contents.room,
 				result
@@ -77,12 +79,13 @@ const AdminAddOrganism: React.FC = () => {
 				<DragDrop/>
 				<br/>
 				<InputText ref={(el) => contentRef.current[0] = el} type={'text'} placeholder={'건물 이름'}/>
+				<InputText ref={(el) => contentRef.current[1] = el} type={'text'} placeholder={'층'}/>
 
 				<br/><br/>
-				<InputText ref={(el) => contentRef.current[1] = el} type={'text'} placeholder={'호수'}/>
-				<InputText ref={(el) => contentRef.current[2] = el} type={'text'} placeholder={'담당자'}/>
+				<InputText ref={(el) => contentRef.current[2] = el} type={'text'} placeholder={'호수'}/>
+				<InputText ref={(el) => contentRef.current[3] = el} type={'text'} placeholder={'담당자'}/>
 				<InputText ref={(el) => contentRef.current[4] = el} type={'text'} placeholder={'크기'}/>
-				<InputText ref={(el) => contentRef.current[3] = el} type={'text'} placeholder={'최대수용인원'}/>
+				<InputText ref={(el) => contentRef.current[5] = el} type={'text'} placeholder={'최대수용인원'}/>
 				<br/><br/>
 				<Button onClick={onAddContent}> 추가하기 </Button>
 				<br/>
