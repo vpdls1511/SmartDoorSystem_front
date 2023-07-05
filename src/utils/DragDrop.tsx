@@ -1,6 +1,7 @@
 // DragDrop.tsx
 import React, {ChangeEvent, useCallback, useEffect, useRef, useState} from 'react';
 import styled from "styled-components";
+import {read} from "fs";
 
 const DragDropComp = styled.div`
   width: 100%;
@@ -14,42 +15,18 @@ const DragDropComp = styled.div`
   -ms-flex-direction: column;
   justify-content: center;
   align-items: center;
+	overflow: hidden;
 `
 
-const FileListWrap = styled.div`
+const PreviewImage = styled.img`
 	width: 100%;
-  cursor: pointer;
-  transition: 0.12s ease-in;
 `
-
-const FileList = styled.div`
-	
-	width: calc(100% - 20px);
-  padding: 8px;
-  border: 1px solid black;
-  margin: 10px;
-  display: flex;
-  justify-content: space-between;
-`
-
-const FileListFilter = styled.div`
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.7;
-  }
-`
-
-interface IFileTypes {
-	id: number; // 파일들의 고유값 id
-	object: File;
-}
-
 
 const DragDrop = (): JSX.Element => {
 	// 드래그 중일때와 아닐때의 스타일을 구분하기 위한 state 변수
 	const [isDragging, setIsDragging] = useState<boolean>(false);
-	const [files, setFiles] = useState<IFileTypes[]>([]);
+	const [file, setFile] = useState<File | null>(null);
+	const [image, setImage] = useState<any>('')
 
 	// 각 선택했던 파일들의 고유값 id
 	const fileId = useRef<number>(0);
@@ -79,32 +56,30 @@ const DragDrop = (): JSX.Element => {
 	}, []);
 
 	const onChangeFiles = useCallback((e: ChangeEvent<HTMLInputElement> | any): void => {
-		let selectFiles: File[] = [];
-		let tempFiles: IFileTypes[] = files;
-		// temp 변수를 이용하여 선택했던 파일들을 담습니다.
+		let selectFile: File
+		const reader = new FileReader()
 
 		// 드래그 했을 때와 안했을 때 가리키는 파일 배열을 다르게 해줍니다.
 		if (e.type === "drop") {
 			// 드래그 앤 드롭 했을때
-			selectFiles = e.dataTransfer.files;
+			selectFile = e.dataTransfer.files[0];
 		} else {
 			// "파일 첨부" 버튼을 눌러서 이미지를 선택했을때
-			selectFiles = e.target.files;
+			selectFile = e.target.files[0];
 		}
 
-		for (const file of selectFiles) {
-			// 스프레드 연산자를 이용하여 기존에 있던 파일들을 복사하고, 선택했던 파일들을 append 해줍니다.
-			tempFiles = [
-				...tempFiles,
-				{
-					id: fileId.current++, // fileId의 값을 1씩 늘려주면서 각 파일의 고유값으로 사용합니다.
-					object: file // object 객체안에 선택했던 파일들의 정보가 담겨있습니다.
-				}
-			];
+		reader.onload = (e: ProgressEvent<FileReader>) => {
+			console.log(e.target?.result)
+			setImage(e.target?.result)
 		}
 
-		setFiles(tempFiles);
-	}, [files]); // 위에서 선언했던 files state 배열을 deps에 넣어줍니다.
+		console.log(selectFile)
+		reader.readAsDataURL(selectFile)
+
+		console.log(selectFile)
+
+		setFile(selectFile);
+	}, [file]); // 위에서 선언했던 files state 배열을 deps에 넣어줍니다.
 
 	const handleDrop = useCallback(
 		(e: DragEvent): void => {
@@ -139,11 +114,6 @@ const DragDrop = (): JSX.Element => {
 		}
 	}, [handleDragIn, handleDragOut, handleDragOver, handleDrop]);
 
-	const handleFilterFile = useCallback((id: number): void => {
-		// 매개변수로 받은 id와 일치하지 않는지에 따라서 filter 해줍니다.
-		setFiles(files.filter((file: any) => file.id !== id));
-	}, [files]);
-
 	useEffect(() => {
 		initDragEvents();
 
@@ -157,39 +127,22 @@ const DragDrop = (): JSX.Element => {
 					type="file"
 					id="fileUpload"
 					style={{display: "none"}} // label을 이용하여 구현하기에 없애줌
-					multiple={true} // 파일 다중선택 허용
+					multiple={false} // 파일 다중선택 허용
 				/>
+				{
+					file == null ?
+						<label
+							className={isDragging ? "DragDrop-File-Dragging" : "DragDrop-File"}
+							htmlFor="fileUpload"
+							ref={dragRef}
+						>
+							클릭하거나 도면을 드래그하여 업로드 해 주세요.
+						</label> :
+						<PreviewImage src={image}>
+						</PreviewImage>
 
-				<label
-					className={isDragging ? "DragDrop-File-Dragging" : "DragDrop-File"}
-					htmlFor="fileUpload"
-					ref={dragRef}
-				>
-					도면을 드래그 해 주세요.
-				</label>
+				}
 			</DragDropComp>
-
-			<FileListWrap>
-				{files.length > 0 &&
-					files.map((file: IFileTypes) => {
-						const {
-							id,
-							object: {name}
-						} = file;
-
-						return (
-							<FileList key={id}>
-								<div>{name}</div>
-								<FileListFilter
-									className="DragDrop-Files-Filter"
-									onClick={(e) => handleFilterFile(id)}
-								>
-									x
-								</FileListFilter>
-							</FileList>
-						);
-					})}
-			</FileListWrap>
 
 		</>
 	);
