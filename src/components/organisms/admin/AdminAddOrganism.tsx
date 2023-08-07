@@ -73,7 +73,7 @@ const AdminAddOrganism: React.FC = () => {
 					result,
 				]
 			}))
-	}, [contents])
+	}, [] )
 
 	const onSubmitData = () => {
 		const formData = new FormData()
@@ -81,16 +81,12 @@ const AdminAddOrganism: React.FC = () => {
 		formData.append('data', JSON.stringify(contents))
 		formData.append('file', file)
 
-		console.log(file)
-
-		console.log(formData.get('file'))
 		onFetchService({
 			url: 'admin/draw',
 			method: 'post',
-			type: 'file',
 			data: formData
-		}).then(res => {
-			console.log(res)
+		}).then((res: any) => {
+			console.log(res.payload)
 		})
 	}
 
