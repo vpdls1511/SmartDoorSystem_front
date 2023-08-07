@@ -1,7 +1,10 @@
 // DragDrop.tsx
 import React, {ChangeEvent, useCallback, useEffect, useRef, useState} from 'react';
 import styled from "styled-components";
-import {read} from "fs";
+
+interface DragDropInterface {
+	setFile: any;
+}
 
 const DragDropComp = styled.div`
   width: 100%;
@@ -23,10 +26,10 @@ const PreviewImage = styled.img`
   cursor: pointer;
 `
 
-const DragDrop = (): JSX.Element => {
+const DragDrop = ({setFile}: DragDropInterface): JSX.Element => {
 	// 드래그 중일때와 아닐때의 스타일을 구분하기 위한 state 변수
 	const [isDragging, setIsDragging] = useState<boolean>(false);
-	const [file, setFile] = useState<File | null>(null);
+	const [upload, setUpload] = useState<File | null>(null);
 	const [image, setImage] = useState<any>('')
 
 	// 각 선택했던 파일들의 고유값 id
@@ -71,13 +74,14 @@ const DragDrop = (): JSX.Element => {
 		}
 		reader.readAsDataURL(selectFile)
 
-		setFile(selectFile);
-	}, [file]);
+		setUpload(selectFile);
+		setFile(selectFile)
+	}, [upload]);
 
 	const onFilterFiles = useCallback((e: any): void => {
-		setFile(null)
+		setUpload(null)
 		setImage('')
-	}, [file])
+	}, [upload])
 
 	const handleDrop = useCallback(
 		(e: DragEvent): void => {
@@ -128,7 +132,7 @@ const DragDrop = (): JSX.Element => {
 					multiple={false} // 파일 다중선택 허용
 				/>
 				{
-					file == null ?
+					upload == null ?
 						<label
 							className={isDragging ? "DragDrop-File-Dragging" : "DragDrop-File"}
 							htmlFor="fileUpload"

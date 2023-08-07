@@ -2,6 +2,21 @@ import React, {useCallback, useRef, useState} from "react";
 import styled from "styled-components";
 import DragDrop from "../../../utils/DragDrop";
 import RoomList from "./RoomList";
+import onFetchService from '../../../utils/onFetchService';
+
+
+interface buildAndRoomInterface {
+	buildName: string;
+	floor: string;
+	room : roomType[];
+}
+type roomType = {
+	roomNo?: string;
+	professorName?: string;
+	size?: string;
+	users?: string;
+}
+
 
 const InputWrap = styled.div`
   flex: 2;
@@ -25,24 +40,16 @@ const Button = styled.button`
 const AdminAddOrganism: React.FC = () => {
 
 	const contentRef = useRef<any>([])
-	const roomRef: any = useRef(null)
-	const noRef: any = useRef(null)
-	const professorRef: any = useRef(null)
-	const stdRef: any = useRef(null)
+	const [file, setFile] = useState<any>()
 
-	const [contents, setContents] = useState({
-		buildName: '공학1관',
-		floor: '3',
-		room : [{
-			roomNo: '323',
-			professorName: '최은복',
-			size: '25',
-			users: '10'
-		}]
+	const [contents, setContents] = useState<buildAndRoomInterface>({
+		buildName: '',
+		floor: '',
+		room: []
 	})
 
 	const onAddContent = useCallback(() => {
-		const temp = contentRef.current
+		const temp = contentRef.current.filter((el: any) => el !== null && el !== undefined);
 
 		for (const it of temp) {
 			if (it.value.isEmpty || !it.value) {
@@ -51,32 +58,46 @@ const AdminAddOrganism: React.FC = () => {
 			}
 		}
 
-		const result = {
+		const result: roomType = {
 			roomNo: temp[2].value,
 			professorName: temp[3].value,
 			size: temp[4].value,
 			users: temp[5].value
 		}
 
-		setContents({
-			buildName: temp[0].value,
-			floor: temp[1].value,
-			room: [
-				...contents.room,
-				result
-			]
-		})
+		setContents((prev: buildAndRoomInterface) => ({
+				buildName: temp[0].value,
+				floor: temp[1].value,
+				room: [
+					...prev.room,
+					result,
+				]
+			}))
 	}, [contents])
 
 	const onSubmitData = () => {
-		const result = JSON.stringify(contents);
-		console.log(result)
+		const formData = new FormData()
+
+		formData.append('data', JSON.stringify(contents))
+		formData.append('file', file)
+
+		console.log(file)
+
+		console.log(formData.get('file'))
+		onFetchService({
+			url: 'admin/draw',
+			method: 'post',
+			type: 'file',
+			data: formData
+		}).then(res => {
+			console.log(res)
+		})
 	}
 
 	return <>
 		<InputWrap>
 			<InfoInputWrap>
-				<DragDrop/>
+				<DragDrop setFile={setFile}/>
 				<br/>
 				<InputText ref={(el) => contentRef.current[0] = el} type={'text'} placeholder={'건물 이름'}/>
 				<InputText ref={(el) => contentRef.current[1] = el} type={'text'} placeholder={'층'}/>
