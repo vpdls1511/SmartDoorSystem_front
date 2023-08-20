@@ -53,10 +53,10 @@ const AdminAccordion: React.FC<{ item: BuildingInterface }> = ({item}) => {
 			{
 				isOpen && <>
 					{item.room.map( (it, key) => {
-						return<>
+						return<div key={key}>
 							{it.room_no}호 / 최대수용인원 : {it.max_user} / 방 크기 : {it.room_size} / 담당교수 : {it.professor_name}
 							<br/>
-						</>
+						</div>
 					})}
 				</>
 			}
