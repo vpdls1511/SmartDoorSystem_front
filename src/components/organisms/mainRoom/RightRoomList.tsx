@@ -26,7 +26,7 @@ const RightRoomList = () => {
 	return room.isSelect ?
 		<RoomItemBody>
 			{
-				room.image && <Image src={'http://localhost:8001/'+room.image}/>
+				room.image && <Image src={'http://202.31.253.176:8001/'+room.image}/>
 			}
 			{
 				room.item?.map((it, key) => {
