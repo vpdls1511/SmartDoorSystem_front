@@ -4,13 +4,17 @@ import onFetchService from '../../../utils/onFetchService';
 import {BuildingInterface} from '../../../common/interfaces/BuildingInterface';
 import AdminAccordion from '../accordion/AdminAccordion';
 
+interface AdminAccordionOrganismInterface {
+	isLoading: boolean
+	setLoading: any
+}
 
 const AccordionWrap = styled.div`
 	flex: 3;
 	padding: 10px;
 `
 
-const AdminAccordionOrganism: React.FC = () => {
+const AdminAccordionOrganism: React.FC<AdminAccordionOrganismInterface> = ({isLoading, setLoading}) => {
 
 	const [building, setBuilding] = useState<BuildingInterface[]>([])
 

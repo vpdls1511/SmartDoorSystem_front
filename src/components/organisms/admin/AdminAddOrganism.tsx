@@ -73,6 +73,12 @@ const AdminAddOrganism: React.FC = () => {
 					result,
 				]
 			}))
+
+		for(let it in contentRef.current){
+			if(parseInt(it) >= 2) {
+				contentRef.current[it].value = ''
+			}
+		}
 	}, [] )
 
 	const onSubmitData = () => {
@@ -86,7 +92,11 @@ const AdminAddOrganism: React.FC = () => {
 			method: 'post',
 			data: formData
 		}).then((res: any) => {
-			console.log(res.payload)
+			setContents({
+				buildName: '',
+				floor: '',
+				room: []
+			})
 		})
 	}
 

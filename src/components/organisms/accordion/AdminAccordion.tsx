@@ -8,6 +8,7 @@ const AccordionBody = styled.div`
 	margin-bottom: 10px;
 	padding: 5px;
 	border-radius: 5px;
+	overflow: hidden;
 	p {
 		display: inline-block;
 	}
