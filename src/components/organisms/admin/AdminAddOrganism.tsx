@@ -112,7 +112,7 @@ const AdminAddOrganism: React.FC = () => {
 				<InputText ref={(el) => contentRef.current[2] = el} type={'text'} placeholder={'호수'}/>
 				<InputText ref={(el) => contentRef.current[3] = el} type={'text'} placeholder={'담당자'}/>
 				<InputText ref={(el) => contentRef.current[4] = el} type={'text'} placeholder={'크기'}/>
-				<InputText ref={(el) => contentRef.current[5] = el} type={'text'} placeholder={'최대수용인원'}/>
+				<InputText ref={(el) => contentRef.current[5] = el} type={'text'} placeholder={'허용밀도(명 / m^2)'}/>
 				<br/><br/>
 				<Button onClick={onAddContent}> 추가하기 </Button>
 				<br/>

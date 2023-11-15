@@ -30,55 +30,43 @@ const LeftSide = styled.div`
   padding: 1rem;
 `
 
-const RightSide = styled.div<{open: number}>`
+const RightSide = styled.div<{open: boolean}>`
 	display: flex;
   flex-direction: column;
-  flex: ${p => p.open};
+  flex: ${p => p.open ? 2 : 0};
 	transition: .5s;
 	overflow: hidden;
 	> * {
-    display: ${p => p.open !== 0 ? 'block' : 'none'};
+    display: ${p => p.open ? 'block' : 'none'};
 	}
 	> p {
 		cursor: pointer;
 		font-size: 2rem;
 	}
 `
-/*
-const RoomInfoWrap = styled.div`
-	p:first-child {
-		font-size: 1.5rem;
-		font-weight: bold;
-	}
-`
 
-const RoomProfessor = styled.div`
-	position: absolute;
+const Float = styled.div`
+	position: fixed;
+	width: 2rem;
+	height: 2rem;
+	background-color: cornflowerblue;
+	border-radius: 2rem;
 	bottom: 1rem;
-	left: 1rem;
-`
-
-const ProfessorBtn = styled.button`
-	padding: .2rem .5rem;
-	cursor: pointer;
-	transition: .5s;
-	border: 1px solid #777;
-	color: #777;
-	&:hover{
-    border: 1px solid #000;
-    color: #000;
-	}
-`
-
-const RoomStatus = styled.div`
-	position: absolute;
 	right: 1rem;
-	bottom: 1rem;
-	p{
-		font-size: 5rem;
-	}
+	cursor: pointer;
 `
-*/
+
+const Arrow = styled.div`
+	position: absolute;
+	left: calc(50% - .1rem);
+	top: 50%;
+	transform: translateX(-50%) translateY(-50%) rotate(45deg);
+	width: .7rem;
+	height: .7rem;
+	border-top: 1px solid #fff;
+	border-right: 1px solid #fff;
+`
+
 const RoomSelect: React.FC = () => {
 
 	const [room, setRoom] = useRecoilState(roomAtom)
@@ -87,7 +75,7 @@ const RoomSelect: React.FC = () => {
 	const handleCloseRightSide = () => {
 		setRoom({
 			isSelect: false,
-			item: []
+			item: -1
 		})
 	}
 
@@ -108,20 +96,13 @@ const RoomSelect: React.FC = () => {
 				})
 			}
 		</LeftSide>
-		<RightSide open={room.isSelect ? 2 : 0}>
+		<RightSide open={room.isSelect}>
 			<p onClick={handleCloseRightSide}> x </p>
 			<RightRoomList />
 		</RightSide>
-{/*		<RoomInfoWrap>
-			<p> 공학1관 | 324호 </p>
-			<p> 강의실 </p>
-		</RoomInfoWrap>
-		<RoomProfessor>
-			<ProfessorBtn>교수님</ProfessorBtn>
-		</RoomProfessor>
-		<RoomStatus>
-			<p> 50명 </p>
-		</RoomStatus>*/}
+		<Float onClick={() => window.location.href = '/admin'}>
+			<Arrow/>
+		</Float>
 	</SelectWrap>
 }
 

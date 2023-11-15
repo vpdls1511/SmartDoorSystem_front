@@ -2,6 +2,8 @@ import {useRecoilValue} from 'recoil';
 import {roomAtom} from '../../../store/atom/roomAtom';
 import styled from 'styled-components';
 import Image from  '../../module/image'
+import {useEffect, useState} from 'react';
+import onFetchService from '../../../utils/onFetchService';
 
 const RoomItemBody = styled.div`
 	display: flex;
@@ -22,6 +24,25 @@ const RoomItem = styled.div`
 
 const RightRoomList = () => {
 	const room = useRecoilValue(roomAtom)
+	const [item, setItem] = useState<any>([])
+
+	const fetch = () => {
+		onFetchService({
+			url: 'room/detail?id=' + room.item,
+			method: 'get'
+		}).then((res: any) => {
+			setItem(res.payload)
+		})
+	}
+
+	useEffect(() => {
+		fetch()
+	}, [room])
+
+	useEffect(() => {
+		const interval = setInterval(() => fetch(), 1000)
+		return () => clearInterval(interval)
+	}, [])
 
 	return room.isSelect ?
 		<RoomItemBody>
@@ -29,8 +50,8 @@ const RightRoomList = () => {
 				room.image && <Image src={'http://202.31.253.176:8001/'+room.image}/>
 			}
 			{
-				room.item?.map((it, key) => {
-					return <RoomItem key={key}> {it.room_no}호 / 최대수용인원 : {it.max_user} / 방 크기 : {it.room_size} / 담당교수  : {it.professor_name}
+				item.map((it: any, key: number) => {
+					return <RoomItem key={key}> {it.room_no}호 / 최대수용인원 : {it.room_size * it.max_user} / 방 크기 : {it.room_size} / 담당교수  : {it.professor_name} / 현재인원 : {it.now_user}
 					</RoomItem>
 				})
 			}

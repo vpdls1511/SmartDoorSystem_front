@@ -24,13 +24,13 @@ const Index = ({item}: MainRoomPropsInterface) => {
 	const handleClickItem = () => {
 		setRoom({
 			isSelect: true,
-			item: [...item.room],
+			item: item.id,
 			image: item.path
 		})
 	}
 
 	return<BuildWrap onClick={handleClickItem}>
-		<p>{item.name} / {item.floor}층 / {item.room.length}개 강의실</p>
+		<p>{item.name} / {item.floor}층 / {item.room.length}개 실</p>
 	</BuildWrap>
 }
 

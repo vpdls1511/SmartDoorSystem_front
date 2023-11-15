@@ -1,6 +1,6 @@
 export interface RoomAtomInterface {
 	isSelect: boolean
-	item?: RoomInterface[]
+	item?: number
 	image?: string
 }
 

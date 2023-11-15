@@ -9,7 +9,7 @@ const RoomList: React.FC<RoomPropsInterface> = ({list}) => {
 		{
 			list.room.length > 0 && list.room.map((it: any, idx: number) => {
 				return <div key={idx}>
-					{list.buildName} | {it.roomNo} | {it.professorName} | {it.size}m^3 | {it.users}명
+					{list.buildName} | {it.roomNo} | {it.professorName} | {it.size}m^2 | 허용밀도 - ({it.users} / m^2)
 				</div>
 			})
 		}
