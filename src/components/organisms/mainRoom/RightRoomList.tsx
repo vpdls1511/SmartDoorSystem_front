@@ -25,24 +25,32 @@ const RoomItem = styled.div`
 const RightRoomList = () => {
 	const room = useRecoilValue(roomAtom)
 	const [item, setItem] = useState<any>([])
+	const [isLoading, setIsLoading] = useState<boolean>(true)
 
 	const fetch = () => {
+		const id = room.item
 		onFetchService({
-			url: 'room/detail?id=' + room.item,
+			url: 'room/detail?id=' + id,
 			method: 'get'
 		}).then((res: any) => {
+			setIsLoading(true)
 			setItem(res.payload)
 		})
 	}
 
 	useEffect(() => {
 		fetch()
+		if(isLoading){
+			setIsLoading(false)
+		}
 	}, [room])
 
 	useEffect(() => {
-		const interval = setInterval(() => fetch(), 1000)
-		return () => clearInterval(interval)
-	}, [])
+		if (isLoading){
+			const interval = setInterval(() => fetch(), 1000)
+			return () => clearInterval(interval)
+		}
+	}, [isLoading])
 
 	return room.isSelect ?
 		<RoomItemBody>
