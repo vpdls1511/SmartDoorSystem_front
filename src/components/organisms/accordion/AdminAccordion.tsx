@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import {BuildingInterface} from '../../../common/interfaces/BuildingInterface';
 import styled from 'styled-components';
 import Arrow from '../../icon/arrow';
+import EditModal from '../../modal/EditModal';
+import onFetchService from '../../../utils/onFetchService';
 
 const AccordionBody = styled.div`
 	border: 1px solid #aaa;
@@ -30,8 +32,36 @@ const Contents = styled.div`
 
 const AdminAccordion: React.FC<{ item: BuildingInterface }> = ({item}) => {
 	const contentRef = useRef<any>(null)
-	const [isOpen, setOpen] = useState<boolean>(false)
+	const [isOpen, setOpen] = useState<boolean>(true)
 	const [height, setHeight] = useState<number>(40)
+	const [editInfo, setEditInfo] = useState({
+		build: item.id,
+		room_no: '',
+		room_size: '',
+		max_user: '',
+		professor_name: '',
+	})
+	const [isModal, setIsModal] = useState(false)
+
+	const editSubmit = () => {
+		onFetchService({
+			url: 'admin/build',
+			method: 'post',
+			data: editInfo
+		}).then((res: any) => {
+			window.location.reload()
+		})
+	}
+
+	const delSubmit = () => {
+		onFetchService({
+			url: 'admin/build',
+			method: 'delete',
+			data: {id: item.id}
+		}).then(res => {
+			window.location.reload()
+		})
+	}
 
 	useEffect(() => {
 		if(contentRef){
@@ -51,19 +81,77 @@ const AdminAccordion: React.FC<{ item: BuildingInterface }> = ({item}) => {
 			<Arrow />
 		</AccordionArrow>
 		<Contents ref={contentRef}>
+			<button onClick={(e) => {
+				setIsModal(true)
+				e.stopPropagation()
+			}}> 방 추가 </button>
 			{
 				isOpen && <>
 					{item.room.map( (it, key) => {
 						return<div key={key}>
-							{it.room_no}호 / 최대수용인원 : {it.room_size * it.max_user} / 방 크기 : {it.room_size} / 담당교수 : {it.professor_name}
-							<br/>
+							<Item item={it}/>
 						</div>
 					})}
 				</>
 			}
+			<EditModal
+				status={isModal}
+				setStatus={setIsModal}
+				editInfo={editInfo}
+				setEditInfo={setEditInfo}
+				editText={'추가'}
+				editSubmit={editSubmit}
+				delSubmit={delSubmit}
+			/>
 		</Contents>
 	</AccordionBody>
+}
 
+const Item = ({item}: any) => {
+
+	const [info, setInfo] = useState(item)
+	const [isEdit, setIsEdit] = useState<boolean>(false)
+	const [isModal, setIsModal] = useState(false)
+	const [editInfo, setEditInfo] = useState(item)
+
+
+	const editSubmit = () => {
+		onFetchService({
+			url: 'admin/room',
+			method: 'post',
+			data: editInfo
+		}).then((res: any) => {
+			window.location.reload()
+		})
+	}
+
+	const delSubmit = () => {
+		onFetchService({
+			url: 'admin/room',
+			method: 'delete',
+			data: {id: editInfo.id}
+		}).then(res => {
+			window.location.reload()
+		})
+	}
+
+	return <>
+    <>
+			{info.room_no}호 / 최대수용인원 : {info.room_size * info.max_user} / 방 크기 : {info.room_size} / 담당교수 : {info.professor_name}
+    </>
+    <button onClick={(e) => {
+			setIsEdit(true)
+	    setIsModal(true)
+			e.stopPropagation()
+		}}> 방 수정 </button>
+		<EditModal status={isModal}
+		           editInfo={editInfo}
+		           setEditInfo={setEditInfo}
+		           setStatus={setIsModal}
+		           editSubmit={editSubmit}
+		           delSubmit={delSubmit}
+		/>
+  </>
 }
 
 export default AdminAccordion

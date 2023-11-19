@@ -21,7 +21,7 @@ const AdminAccordionOrganism: React.FC<AdminAccordionOrganismInterface> = ({isLo
 	useEffect(() => {
 		onFetchService({
 			url: 'admin/draw',
-			method: 'get'
+			method: 'get',
 		}).then((res: any) => {
 			setBuilding(res.payload)
 		})

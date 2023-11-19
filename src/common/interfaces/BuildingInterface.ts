@@ -8,6 +8,7 @@ export interface BuildingInterface {
 }
 
 export interface RoomInterface {
+	id: number
 	build: number
 	max_user: number
 	professor_name: string
