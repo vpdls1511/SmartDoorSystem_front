@@ -72,11 +72,16 @@ const EditModal = ({status, setStatus, editInfo,
 	>
 		<ModalContent onClick={e => e.stopPropagation()}>
 			<div>
-				<Title>호실 순서</Title>
-				<Input
-					value={editInfo.room_order}
-					onChange={e => handleUpdateInfo('room_order', e.target.value)}
-				/>
+				{
+					editInfo.room_order && <>
+						<Title>호실 순서</Title>
+						<Input
+							value={editInfo.room_order}
+							onChange={e => handleUpdateInfo('room_order', e.target.value)}
+						/>
+					</>
+				}
+
 				<Title>호실 번호</Title>
 				<Input
 					value={editInfo.room_no}
