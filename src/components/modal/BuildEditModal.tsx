@@ -59,6 +59,7 @@ const BuildEditModal = ({
 
   const [build, setBuild] = useState({
     id: item.id,
+    building_order: item.building_order,
     name: item.name,
     floor: item.floor
   })
@@ -78,7 +79,13 @@ const BuildEditModal = ({
     }}
   >
     <ModalContent onClick={e => e.stopPropagation()}>
+
       <div>
+        <Title>순서</Title>
+        <Input
+          value={build.building_order}
+          onChange={e => handleUpdateInfo('building_order', e.target.value)}
+        />
         <Title>건물 이름</Title>
         <Input
           value={build.name}
