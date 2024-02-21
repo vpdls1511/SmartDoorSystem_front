@@ -53,8 +53,8 @@ const Button = styled.button<{ submit?: boolean, del?: boolean }>`
 `
 
 const EditModal = ({status, setStatus, editInfo,
-	editText,
-	                   setEditInfo, editSubmit, delSubmit}: any) => {
+	editText,editSubmit,
+	                   setEditInfo, createSubmit, delSubmit}: any) => {
 
 	const handleUpdateInfo = (key: string, value: string) => {
 		setEditInfo({
@@ -98,13 +98,15 @@ const EditModal = ({status, setStatus, editInfo,
 						e.stopPropagation()
 					}}>취소</Button>
 					<Button submit onClick={(e) => {
-						editSubmit()
+						editSubmit ? editSubmit() : createSubmit()
 						e.stopPropagation()
 					}}>{editText ? editText : '수정'}</Button>
-					<Button del onClick={(e) => {
-						delSubmit()
-						e.stopPropagation()
-					}}>삭제</Button>
+					{
+						delSubmit && <Button del onClick={(e) => {
+							delSubmit()
+							e.stopPropagation()
+						}}>삭제</Button>
+					}
 				</ButtonWrap>
 			</div>
 		</ModalContent>

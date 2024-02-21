@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Arrow from '../../icon/arrow';
 import EditModal from '../../modal/EditModal';
 import onFetchService from '../../../utils/onFetchService';
+import BuildEditModal from "../../modal/BuildEditModal";
 
 const AccordionBody = styled.div`
 	border: 1px solid #aaa;
@@ -32,7 +33,7 @@ const Contents = styled.div`
 
 const AdminAccordion: React.FC<{ item: BuildingInterface }> = ({item}) => {
 	const contentRef = useRef<any>(null)
-	const [isOpen, setOpen] = useState<boolean>(true)
+	const [isOpen, setOpen] = useState<boolean>(false)
 	const [height, setHeight] = useState<number>(40)
 	const [editInfo, setEditInfo] = useState({
 		build: item.id,
@@ -42,12 +43,22 @@ const AdminAccordion: React.FC<{ item: BuildingInterface }> = ({item}) => {
 		professor_name: '',
 	})
 	const [isModal, setIsModal] = useState(false)
+	const [isEditModal, setIsEditModal] = useState(false)
 
-	const editSubmit = () => {
+	const createSubmit = () => {
 		onFetchService({
 			url: 'admin/build',
 			method: 'post',
 			data: editInfo
+		}).then((res: any) => {
+			window.location.reload()
+		})
+	}
+	const editSubmit = (build: any) => {
+		onFetchService({
+			url: 'admin/build',
+			method: 'put',
+			data: build
 		}).then((res: any) => {
 			window.location.reload()
 		})
@@ -81,6 +92,11 @@ const AdminAccordion: React.FC<{ item: BuildingInterface }> = ({item}) => {
 			<Arrow />
 		</AccordionArrow>
 		<Contents ref={contentRef}>
+
+			<button onClick={(e) => {
+				setIsEditModal(true)
+				e.stopPropagation()
+			}}> 건물 수정 </button>
 			<button onClick={(e) => {
 				setIsModal(true)
 				e.stopPropagation()
@@ -100,6 +116,14 @@ const AdminAccordion: React.FC<{ item: BuildingInterface }> = ({item}) => {
 				editInfo={editInfo}
 				setEditInfo={setEditInfo}
 				editText={'추가'}
+				createSubmit={createSubmit}
+			/>
+
+			<BuildEditModal
+				status={isEditModal}
+				setStatus={setIsEditModal}
+				item={item}
+				editText={'수정'}
 				editSubmit={editSubmit}
 				delSubmit={delSubmit}
 			/>
@@ -115,7 +139,7 @@ const Item = ({item}: any) => {
 	const [editInfo, setEditInfo] = useState(item)
 
 
-	const editSubmit = () => {
+	const createSubmit = () => {
 		onFetchService({
 			url: 'admin/room',
 			method: 'post',
@@ -148,7 +172,7 @@ const Item = ({item}: any) => {
 		           editInfo={editInfo}
 		           setEditInfo={setEditInfo}
 		           setStatus={setIsModal}
-		           editSubmit={editSubmit}
+		           createSubmit={createSubmit}
 		           delSubmit={delSubmit}
 		/>
   </>
