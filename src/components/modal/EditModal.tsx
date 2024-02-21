@@ -73,7 +73,7 @@ const EditModal = ({status, setStatus, editInfo,
 		<ModalContent onClick={e => e.stopPropagation()}>
 			<div>
 				{
-					editInfo.room_order && <>
+					editInfo.room_order >= 0 && <>
 						<Title>호실 순서</Title>
 						<Input
 							value={editInfo.room_order}
